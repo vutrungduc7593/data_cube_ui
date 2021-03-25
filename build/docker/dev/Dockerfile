@@ -5,6 +5,7 @@ ARG BASE_IMG
 FROM $BASE_IMG
 
 COPY build/native/sys_deps/install_dev_deps.sh build/native/sys_deps/install_dev_deps.sh
+RUN chmod 555 build/native/sys_deps/install_dev_deps.sh
 RUN build/native/sys_deps/install_dev_deps.sh
 
 ARG WORKDIR=/app
@@ -31,6 +32,7 @@ ENV ODC_DB_HOSTNAME=${ODC_DB_HOSTNAME} \
 # # db_password: ${ODC_DB_PASSWORD} \n" > config/datacube.conf
 # # RUN cp config/datacube.conf /etc/datacube.conf
 COPY build/native/odc_conf.sh build/native/odc_conf.sh
+RUN chmod 555 build/native/odc_conf.sh
 RUN build/native/odc_conf.sh
 ENV DATACUBE_CONFIG_PATH=${WORKDIR}/config/datacube.conf
 
@@ -55,6 +57,7 @@ COPY config/templates/dc_ui.conf config/templates/dc_ui.conf
 # # Set Apache to start on system boot.
 # RUN update-rc.d apache2 defaults
 COPY build/native/apache_conf.sh build/native/apache_conf.sh
+RUN chmod 555 build/native/apache_conf.sh
 RUN build/native/apache_conf.sh
 
 # Postgres pgpass configuration.
@@ -77,6 +80,7 @@ ENV DJANGO_DB_HOSTNAME=${DJANGO_DB_HOSTNAME} \
 # RUN cp config/.pgpass /var/www/.pgpass
 # RUN chmod 600 /var/www/.pgpass
 COPY build/native/pg_conf.sh build/native/pg_conf.sh
+RUN chmod 555 build/native/pg_conf.sh
 RUN build/native/pg_conf.sh
 ENV PGPASSFILE=/var/www/.pgpass
 
@@ -100,6 +104,7 @@ COPY config/celerybeat config/celerybeat
 # RUN cp config/celerybeat /etc/init.d/celerybeat && \
 #     chmod 777 /etc/init.d/celerybeat 
 COPY build/native/celery_conf.sh build/native/celery_conf.sh
+RUN chmod 555 build/native/celery_conf.sh
 RUN build/native/celery_conf.sh
 
 # Copy remaining files.
@@ -156,10 +161,12 @@ ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
     
 ENV NEW_APACHE_USER_PATH=''
 COPY build/native/env_vars.sh build/native/env_vars.sh
+RUN chmod 555 build/native/env_vars.sh
 RUN build/native/env_vars.sh
 # RUN su -c 'build/native/apache_env_vars.sh'
 
 COPY build/native/export_path.sh build/native/export_path.sh
+RUN chmod 555 build/native/export_path.sh
 RUN build/native/export_path.sh
 # RUN su -c 'build/native/export_path.sh'
 
